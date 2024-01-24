@@ -11,7 +11,9 @@ struct ContentView: View {
     @State private var numberInput: String = ""
     @State private var resetBool = false
     @State private var onboardingComplete = false
-    @State private var showAlert = false
+    @State private var showLengthAlert = false
+    @State private var showInvalidInputAlert = false
+    @State private var alertTriggered = false
     var body: some View {
         
         if(onboardingComplete){
@@ -55,16 +57,31 @@ struct ContentView: View {
                                 if(!dictModel.finalArrayDownloaded){
                                     
                                     if(!resetBool){
-                                        Text("Awesome! You completed the third step. \n You now have a digital dictionary with 2,130 words mapped each mapped to a 3 digit T-9 numeric code. For example, 'cab':222")}else{
-                                            
+                                        VStack{
+                                            Text("Awesome! You completed the third step. \n You now have a digital dictionary with 2,130 words mapped each mapped to a 3 digit T-9 numeric code. For example, 'cab':222")}
+                                        
+                                        Text("Number Input: \(numberInput)")
+                                        
+                                    }
+                                    
+                                    else{
+                                        VStack{
                                             Text("You already created your digital dictonary with words mapped to a 3 digit T-9 numeric code, so it is ready for use! No need to pre-process again.")
+                                            
+                                            Text("Number Input: \(numberInput)")
+                                        }
                                         }
                                     
                                     
                                     
-                                    TextField("Enter Number", text: $numberInput)
-                                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                                        .padding()
+//                                    TextField("Enter Number", text: $numberInput)
+//                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+//                                        .padding()
+                                    
+                                    KeypadView(numberInput: $numberInput, showLengthAlert: $showLengthAlert, showInvalidInputAlert: $showInvalidInputAlert, alertTriggered: $alertTriggered)
+                                    
+                                    
+                                    
                                     
                                     Button(action: {
                                         print("determine all words for number called")
@@ -81,10 +98,7 @@ struct ContentView: View {
                                                 print("Invalid input. Please enter a valid number.")
                                             }
                                         }
-                                        else{
-                                            showAlert = true
-                                            
-                                        }
+                                       
                                         
                                         
                                         
@@ -208,13 +222,32 @@ struct ContentView: View {
                 }
             }
             .padding()
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Invalid Input"),
-                    message: Text("Please enter a valid 3-digit number."),
-                    dismissButton: .default(Text("OK"))
-                )
+        
+    
+            .alert(isPresented: $alertTriggered) {
+                if showLengthAlert {
+                    return Alert(
+                        title: Text("Cannot exceed 3 digits"),
+                        message: Text("Please delete a digit if need be"),
+                        dismissButton: .default(Text("OK")) {
+                                       // Reset showLengthAlert when dismissed
+                                       showLengthAlert = false
+                                   }
+                    )
+                } else if showInvalidInputAlert {
+                    return Alert(
+                        title: Text("Invalid input"),
+                        message: Text("Please only use digits 2-9."),
+                        dismissButton: .default(Text("OK")) {
+                                       // Reset showLengthAlert when dismissed
+                            showInvalidInputAlert = false
+                                   }
+                    )
+                } else {
+                    return Alert(title: Text(""))
+                }
             }
+
         }
         else {
             Text("This app will take you through a mock interview question and the steps you could potentially take to reach an algorithmic solution, specifically focused on pre-processing.\n\n First, run through the app to understand the overall algorthim works. \n\n Next, before throughly analyzing my source code, I encourage you to attempt to come up with your own solution, and see if you can determine how to properly pre-process the provided raw-dict.txt file. \n\n Finally, check out my source code to futher understand how I implemented my solution -- any feedback or suggestions are appreciated!")
