@@ -19,7 +19,8 @@ struct KeypadView: View {
     @Binding  var showLengthAlert : Bool
     @Binding  var showInvalidInputAlert :Bool
     @Binding var alertTriggered : Bool
-    
+    var isActive: Bool
+    var condensed : Bool = false
     var body: some View {
         VStack{
             //  Text("Number Input : \(numberInput)")
@@ -31,48 +32,80 @@ struct KeypadView: View {
                                 Button(action: {
                                     if keypadButtons[row][col] == "1" {
                                         print("invalid")
-                                        showInvalidInputAlert = true
-                                        alertTriggered = true
+                                        if(isActive){
+                                            showInvalidInputAlert = true
+                                            alertTriggered = true
+                                        }
                                     } else if keypadButtons[row][col] == "*" {
                                         print("invalid")
-                                        showInvalidInputAlert = true
-                                        alertTriggered = true
+                                        if(isActive){
+                                            showInvalidInputAlert = true
+                                            alertTriggered = true
+                                        }
                                     } else if keypadButtons[row][col] == "#" {
                                         print("invalid")
-                                        showInvalidInputAlert = true
-                                        alertTriggered = true
-                                    }
-                                    else if keypadButtons[row][col] == "0" {
-                                        print("invalid")
-                                        showInvalidInputAlert = true
-                                        alertTriggered = true
-                                    }
-                                    else {
-                                        print("valid")
-                                        if numberInput.count < 3 {
-                                            print("adding")
-                                            numberInput += keypadButtons[row][col]
-                                        } else {
-                                            // alert user it is full
-                                            print("full")
-                                            showLengthAlert = true
+                                        if(isActive){
+                                            showInvalidInputAlert = true
                                             alertTriggered = true
                                         }
                                     }
-                                }) {
-                                    ZStack {
-                                        VStack{
-                                            Text(keypadButtons[row][col])
-                                                .font(.title)
-                                                .foregroundColor(.white)
-                                            
-                                            Text(lettersUnderNumbers[row][col])
-                                                .font(.subheadline)
-                                                .foregroundColor(.white)
+                                    else if keypadButtons[row][col] == "0" {
+                                        print("invalid")
+                                        if(isActive){
+                                            showInvalidInputAlert = true
+                                            alertTriggered = true
                                         }
-                                    } .frame(width: 60, height: 60)
-                                        .background(Color.blue)
-                                        .cornerRadius(10)
+                                    }
+                                    else {
+                                        if(isActive){
+                                            print("valid")
+                                            if numberInput.count < 3 {
+                                                print("adding")
+                                                numberInput += keypadButtons[row][col]
+                                            } else {
+                                                // alert user it is full
+                                                print("full")
+                                                showLengthAlert = true
+                                                alertTriggered = true
+                                            }
+                                        }
+                                        
+                                    }
+                                }) {
+                                    
+                                    if(condensed){
+                                        ZStack {
+                                            VStack{
+                                                Text(keypadButtons[row][col])
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.white)
+                                                
+                                                Text(lettersUnderNumbers[row][col])
+                                                    .font(.caption)
+                                                    .foregroundColor(.white)
+                                            }
+                                        } .frame(width: 30, height: 30)
+                                            .background(Color.blue)
+                                            .cornerRadius(0)
+                                        
+                                    }else{
+                                        
+                                        ZStack {
+                                            VStack{
+                                                Text(keypadButtons[row][col])
+                                                    .font(.title)
+                                                    .foregroundColor(.white)
+                                                
+                                                Text(lettersUnderNumbers[row][col])
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.white)
+                                            }
+                                        } .frame(width: 60, height: 60)
+                                            .background(Color.blue)
+                                            .cornerRadius(10)
+                                        
+                                    }
+                                    
                                 }
                             }
                         }
@@ -83,12 +116,20 @@ struct KeypadView: View {
             .background(.black)
             .cornerRadius(10)
             
-            Button {
-                numberInput.removeLast()
-            } label: {
-                Text("delete digit")
+            if(!condensed){
+                Button {
+                    if(isActive && numberInput != ""){
+                        numberInput.removeLast()
+                    }
+                } label: {
+                    Text("delete digit")    .padding()
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .font(.headline)
+                        .cornerRadius(10)
+                }
+                
             }
-            
         }
         
         
@@ -98,6 +139,6 @@ struct KeypadView: View {
 
 struct KeypadView_Previews: PreviewProvider {
     static var previews: some View {
-        KeypadView(numberInput: .constant(""), showLengthAlert: .constant(false), showInvalidInputAlert: .constant(false), alertTriggered: .constant(false))
+        KeypadView(numberInput: .constant(""), showLengthAlert: .constant(false), showInvalidInputAlert: .constant(false), alertTriggered: .constant(false), isActive: true)
     }
 }

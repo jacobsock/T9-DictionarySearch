@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var showLengthAlert = false
     @State private var showInvalidInputAlert = false
     @State private var alertTriggered = false
+    @State private var textOpacity = 0.0
     var body: some View {
         
         if(onboardingComplete){
@@ -31,25 +32,62 @@ struct ContentView: View {
                         
                         
                         if(!dictModel.threeLetterProcessedDictDownloaded){
-                            Text("Awesome! You completed the first step. \n You now have a digital dictionary with 370,100 words contained in it. This is quite a lot. For this challenge, we are only concered with 3 letter words. Let's do some pre-processing on the digital dictonary so it only contains 3 letter words, greatly reducing our input size which will improve runtime efficency")
+                            VStack{
+                                Text("Awesome! \n \n You completed the first step. \n").multilineTextAlignment(.center)
+                             
+                                Image("dictonary-image").resizable().scaledToFit()
+                               
+                                Text("You now have a digital dictionary with \(dictModel.wordsInRawDict) words contained in it. \n \n This is quite a lot! \n \n For this challenge, we are only concered with 3 letter words. \n \n Let's do some pre-processing on the digital dictonary so it only contains 3 letter words. \n\n This will greatly reduce our input size which in turn will improve runtime efficency").multilineTextAlignment(.center)
+                            }
                             Button(action: {
                                 print("pre-process to 3 pressed!")
                                 dictModel.threeLetterWordsPreProcess()
                                 
                             }, label: {
-                                Text("Pre-process raw digital dictonary to only contain words with 3 letters")
+                                Text("Pre-process digital dictonary to only contain words with 3 letters")
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .font(.headline)
+                                    .cornerRadius(10)
                             })
                             
                         }else{
                             if(!dictModel.wordsMappedToNumbersDictDownloaded){
-                                Text("Awesome! \n \n You completed the second step. \n\n You now have a digital dictionary with only 2,130  words contained in it compared to 370,100. \n \n This is quite an improvement. \n \n Since we need to use this digital dictonary to look up words based on a 3 digit T-9 numeric code produced from the digital mobile phone emulator. Is there another pre-processing operation we can perform? \n\n Let's try pre-process our small dictionary so each word is mapped to a numeric code for faster lookup.")
+                                Text("Way to go! \n \n You completed the second step. \n").multilineTextAlignment(.center)
+                              
+                                ZStack{
+                                    Image("dictonary-image").resizable().scaledToFit()
+                                    Text("Only contains 3 letter words!")
+                                        .rotationEffect(.degrees(-45))
+                                        .offset(CGSize(width: 100.0, height: -60.0))
+                                        .opacity(textOpacity)
+                                        .animation(.easeIn(duration: 1.5)) // Adjust duration as needed
+                                        .onAppear {
+                                            // Set opacity to 1 when the view appears
+                                            withAnimation {
+                                                textOpacity = 1
+                                            }
+                                        }
+                                        .onDisappear{
+                                            textOpacity = 0.0
+                                        }
+
+                                }
+                                Text("You now have a digital dictionary with only \(dictModel.wordsInThreeLetterProcessedDict) words contained in it compared to 370,100. \n \n This is quite an improvement! \n \n We need to use this dictonary to look up words based on a 3 digit T-9 numeric code. \n\n Let's further pre-process our dictionary so each word is mapped to a numeric code for faster lookup.").multilineTextAlignment(.center)
+                                
                                 Button(action: {
                                     print("map each word in dictionary to 3 digit pressed")
                                     //dictModel.threeLetterWordsPreProcess()
                                     dictModel.mapThreeLetterWordsToNumbers()
                                     
                                 }, label: {
-                                    Text("map each word in dictionary to 3 digit int")
+                                    Text("Map each word in the dictionary to a 3 digit integer")
+                                        .padding()
+                                        .background(Color.blue)
+                                        .foregroundColor(.white)
+                                        .font(.headline)
+                                        .cornerRadius(10)
                                 })
                                 
                             }else{
@@ -58,9 +96,15 @@ struct ContentView: View {
                                     
                                     if(!resetBool){
                                         VStack{
-                                            Text("Awesome! You completed the third step. \n You now have a digital dictionary with 2,130 words mapped each mapped to a 3 digit T-9 numeric code. For example, 'cab':222")}
+                                            Text("Fantastic! You completed the final pre processing step.").multilineTextAlignment(.center)
+                                         
+                                    
+                                                Image("dictonary-image").resizable().scaledToFit()
+                                            
+                                
+                                            Text("You now have a digital dictionary with 2,130 words mapped each mapped to a 3 digit T-9 numeric code.\n For example, \(Text("'cab':222").bold())").multilineTextAlignment(.center)}
                                         
-                                        Text("Number Input: \(numberInput)")
+                                        Text("\n \(Text("Inputed Number:").bold()) \(numberInput)")
                                         
                                     }
                                     
@@ -78,7 +122,7 @@ struct ContentView: View {
 //                                        .textFieldStyle(RoundedBorderTextFieldStyle())
 //                                        .padding()
                                     
-                                    KeypadView(numberInput: $numberInput, showLengthAlert: $showLengthAlert, showInvalidInputAlert: $showInvalidInputAlert, alertTriggered: $alertTriggered)
+                                    KeypadView(numberInput: $numberInput, showLengthAlert: $showLengthAlert, showInvalidInputAlert: $showInvalidInputAlert, alertTriggered: $alertTriggered, isActive: true)
                                     
                                     
                                     
@@ -103,7 +147,11 @@ struct ContentView: View {
                                         
                                         
                                     }, label: {
-                                        Text("Determine all words for number \(numberInput)")
+                                        Text("Determine all words for number: \(numberInput)")    .padding()
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .font(.headline)
+                                            .cornerRadius(10)
                                     })
                                     
                                 }else{
@@ -134,7 +182,11 @@ struct ContentView: View {
                                         numberInput = ""
                                         
                                     }, label: {
-                                        Text("New 3 digit T-9 Search")
+                                        Text("New 3 digit T-9 Search")    .padding()
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .font(.headline)
+                                            .cornerRadius(10)
                                     })
                                     
                                     Button(action: {
@@ -156,7 +208,11 @@ struct ContentView: View {
                                         numberInput = ""
                                         
                                     }, label: {
-                                        Text("Reset Tutorial")
+                                        Text("Reset Tutorial")    .padding()
+                                            .background(Color.blue)
+                                            .foregroundColor(.white)
+                                            .font(.headline)
+                                            .cornerRadius(10)
                                     })
                                 }
                                 
@@ -178,30 +234,45 @@ struct ContentView: View {
                     
                     
                 }else{
-                    Text("Welcome to your interview\n")
-                    
-                    Text("You arrive at your first software engineering job interview and your interviewer supplies you with a digital mobile phone emulator and digital dictonary. \n \n")
-                    
+                    Text("Welcome to Your Mock Interview 🌟\n").font(.title).multilineTextAlignment(.center)
+
+                    Text("Your interviewer provides you with:\n1) Digital mobile phone emulator📱\n2) A digital dictionary in which all words are stored in an array as strings. 📖")
+                        .font(.body)
+
+
                     HStack{
-                        
-                        Image(systemName: "book")
-                        
-                        Image(systemName: "phone")
+                    
+                    //Image(systemName: "phone")
+                        KeypadView(numberInput: .constant(""), showLengthAlert: .constant(false), showInvalidInputAlert: .constant(false), alertTriggered: .constant(false), isActive: false, condensed: true)
+                        Image("dictonary-image").resizable().scaledToFit()
                     }
-                    
-                    Text("The interviewer wants you to write an algorithm, that when given a random 3 digit sequence, such as 687, it returns all the possible words that are able to be created with that sequence via the digital mobile phone simulator using T-9 inputs. For the input 687, the expected result is: our,mus,mts,nus. \n \n Note: The provided digital dictonary will contain abbreivations such as 'mus,mts,nus' it is completely valid for your solution to contain those as well, for this exercise you do not need to excluded them \n \n They encourage  you to pre-process the dictionary in order to reduce the input size for your final algorithm, and explain that when they test your solution with random 3 number sequences the runtime must be at most O(n).\n\n")
-                    
-                    Spacer()
-                    Text("Please download the raw digital dictonary to get started!")
-                    
-                    Button(action: {
-                        print("download raw dict pressed!")
-                        dictModel.downloadDict()
+                    VStack{
+                        Text("(The instructions scroll)").font(.footnote)
+                        Text("Your Instructions:")
+                      
+                    }
+                    ScrollView{
+                        Text("Write an algorithm that, given a random 3-digit sequence (e.g., 687), returns all possible words that can be created using the T-9 inputs on the digital mobile phone emulator (digits 0-9 representing possible characters a-z). \n \n For example for an input of 687, the expected result is: \(Text("our").bold()), \(Text("mus").bold()), \(Text("mts").bold()), \(Text("nus").bold()).\n\n \(Text("Note:").bold())The provided dictionary will contain abbreviations like '\(Text("mus").bold()), \(Text("mts").bold()), \(Text("nus").bold()),' it's valid for your solution to include them. \n\n\(Text("Your challenge:").bold()) Pre-process the dictionary to reduce input size for your final algorithm.  \n The runtime for testing with random 3-number sequences must be at most O(n).\n")
                         
+                    }
+
+                    Spacer()
+
+                    Text("Ready to start? Download the raw digital dictionary to proceed!").multilineTextAlignment(.center)
+
+
+                    Button(action: {
+                        print("Download Raw Dictionary Pressed!")
+                        dictModel.downloadDict()
                     }, label: {
-                        Text("Download Raw Digital Dictonary from Bundle")
+                        Text("Download Raw Digital Dictionary from Bundle")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .font(.headline)
+                            .cornerRadius(10)
                     })
-                    
+
                 }
                 
                 
@@ -209,17 +280,11 @@ struct ContentView: View {
                 
                 
                 Spacer()
-                if(dictModel.rawDictDownloaded){
-                    Text("Words in raw digital Dictionary: \(dictModel.wordsInRawDict) ")
-                }
+              
                 
-                if(dictModel.threeLetterProcessedDictDownloaded){
-                    Text("Words in pre-processed digital Dictionary containing only 3 letters: \(dictModel.wordsInThreeLetterProcessedDict) ")
-                }
+    
                 
-                if(dictModel.wordsMappedToNumbersDictDownloaded){
-                    Text("Words successfully mapped to number: \(dictModel.wordsInWordsMappedToNumbersDict) ")
-                }
+               
             }
             .padding()
         
@@ -250,15 +315,22 @@ struct ContentView: View {
 
         }
         else {
-            Text("This app will take you through a mock interview question and the steps you could potentially take to reach an algorithmic solution, specifically focused on pre-processing.\n\n First, run through the app to understand the overall algorthim works. \n\n Next, before throughly analyzing my source code, I encourage you to attempt to come up with your own solution, and see if you can determine how to properly pre-process the provided raw-dict.txt file. \n\n Finally, check out my source code to futher understand how I implemented my solution -- any feedback or suggestions are appreciated!")
+            VStack{
+            Text("Welcome to my Mock Interview Prep App! 🚀").multilineTextAlignment(.center)
+            Text("This app will guide you through a mock interview questions. \n \nThe current one is specifically focused on pre-processing data in order to create more efficient algorithmic solutions.\n\n You will be learning how to find all the possible 3 letter words you can create from a 3 digit T-9 input code from a mobile emulator. \n \n First, take a walkthrough of the app to grasp the overall algorithm. \n\n Next, before diving into the source code, try  implementing a solution of your own. See if you can effectively pre-process the provided raw-dict.txt file provided in the project as demonstrated in the tutorial.\n\nFinally, please free to explore my source code for insights into my implementation. Your feedback and suggestions are highly appreciated!").padding()
             
             Button(action: {
                 onboardingComplete = true
-                
-                
             }, label: {
-                Text("Get Started")
+                Text("Start Tutorial")
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .font(.headline)
+                    .cornerRadius(10)
             })
+        }
+
         }
         
         
