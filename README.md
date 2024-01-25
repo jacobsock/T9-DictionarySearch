@@ -1,5 +1,9 @@
-Read Me
+Goals:
+- Demonstrate how being conscientiousness with your data choice can improve an algorithms run time.
+- Furthemore, demonstrate how pre-processing data can improve an algorithms run time.
+- Create a clear algorithmic solution others can understand and build upon.
 
+Resources:
 
 https://stackoverflow.com/questions/51772246/handling-large-array-in-swift
 
