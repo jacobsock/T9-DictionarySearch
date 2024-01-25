@@ -53,7 +53,7 @@ struct ContentView: View {
                             })
                             
                         }else{
-                            if(!dictModel.wordsMappedToNumbersDictDownloaded){
+                            if(!dictModel.wordsMappedToNumberDictDownloaded){
                                 Text("Way to go! \n \n You completed the second step. \n").multilineTextAlignment(.center)
                               
                                 ZStack{
@@ -102,7 +102,7 @@ struct ContentView: View {
                                                 Image("dictonary-image").resizable().scaledToFit()
                                             
                                 
-                                            Text("You now have a digital dictionary with 2,130 words mapped each mapped to a 3 digit T-9 numeric code.\n For example, \(Text("'cab':222").bold())").multilineTextAlignment(.center)}
+                                            Text("You now have a digital dictionary with 2,130 words mapped each mapped to a 3 digit T-9 numeric code.\n For example:  \(Text("'687': [mts,mus,nus,our]").bold())").multilineTextAlignment(.center)}
                                         
                                         Text("\n \(Text("Inputed Number:").bold()) \(numberInput)")
                                         
@@ -199,9 +199,9 @@ struct ContentView: View {
                                         dictModel.wordsInThreeLetterProcessedDict = 0
                                         dictModel.threeLetterProcessedDictDownloaded = false
                                         
-                                        dictModel.wordsMappedToNumbersDict = [:]
-                                        dictModel.wordsInWordsMappedToNumbersDict = 0
-                                        dictModel.wordsMappedToNumbersDictDownloaded = false
+                                        dictModel.wordsMappedToNumberDict = [:]
+                                        dictModel.wordsInWordsMappedToNumberDict = 0
+                                        dictModel.wordsMappedToNumberDictDownloaded = false
                                         
                                         dictModel.finalArray.removeAll()
                                         dictModel.finalArrayDownloaded = false

@@ -25,10 +25,9 @@ class DictonaryModel : ObservableObject {
     @Published var wordsInThreeLetterProcessedDict : Int = 0
     @Published var threeLetterProcessedDictDownloaded : Bool = false
     
-    @Published var wordsMappedToNumbersDict : [String: Int]  = [:]
-    
-    @Published var wordsInWordsMappedToNumbersDict : Int = 0
-    @Published var wordsMappedToNumbersDictDownloaded : Bool = false
+    @Published var wordsMappedToNumberDict : [Int: [String]]  = [:]
+    @Published var wordsInWordsMappedToNumberDict : Int = 0
+    @Published var wordsMappedToNumberDictDownloaded : Bool = false
   
     
      var finalArray : [String] = []
@@ -306,27 +305,31 @@ class DictonaryModel : ObservableObject {
             }
             
             let numberValue = Int(numberString)!
-            
-            wordsMappedToNumbersDict[word] = numberValue
-            
-            wordsInWordsMappedToNumbersDict = wordsMappedToNumbersDict.count
-            wordsMappedToNumbersDictDownloaded = true
+        
+            if var wordsArray = wordsMappedToNumberDict[numberValue] {
+                // Key exists, append the new word
+                wordsArray.append(word)
+                wordsMappedToNumberDict[numberValue] = wordsArray
+            } else {
+                // Key does not exist, create a new array with the word
+                wordsMappedToNumberDict[numberValue] = [word]
+            }
+            wordsInWordsMappedToNumberDict = wordsMappedToNumberDict.count
+            wordsMappedToNumberDictDownloaded = true
             
         }
-        print(wordsMappedToNumbersDict)
+        print(wordsMappedToNumberDict)
     }
     
-    
+
     func determineAllWords(number: Int){
-        
-            // Iterate over the dictionary
-            for (word, value) in wordsMappedToNumbersDict {
-                // Check if the value matches the given number
-                if value == number {
-                    // Add the word to the final array
-                    self.finalArray.append(word)
-                }
+        for (key, value) in wordsMappedToNumberDict {
+            // Check if the value matches the given number
+            if key == number {
+                // Add the word to the final arra
+                self.finalArray = value
             }
+        }
         
         print(finalArray)
         finalArrayDownloaded = true
